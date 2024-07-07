@@ -30,7 +30,9 @@ import { DeleteData, getData } from "../config/FirebaseMethods";
 import { AnyAaaaRecord, AnyARecord } from "dns";
 import { Modal } from "@mui/material";
 import EditForm from "./EditStudents";
-import { useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import EditTeacherForm from "./EditTeacher";
+import EditSubjectForm from "./EditSubject";
 // import { style } from "@mui/system";
 
 
@@ -56,24 +58,24 @@ export default function UsersList() {
   const handleEditClose = () => setEditOpen(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  // const empCollectionRef = collection(db, "products");
   const navigate = useNavigate();
 
   const navigateScreen=(route:string)=>
   {
     navigate(`/dashboard/${route}`)
   }
+
   useEffect(() => {
-    getStudents();
+    getSubjects();
   }, []);
 
-  const getStudents = ()=> {
-    getData("students").then((res)=>{
-      const studentData:any = res;
+  const getSubjects = ()=> {
+    getData("subjects").then((res)=>{
+      const SubjectData:any = res;
        
-        let studentsList:any = null;
-          setRows(studentData);
-          console.log("studentData",studentData)
+        let teacherList:any = null;
+          setRows(SubjectData);
+          console.log("studentData",SubjectData)
       
       }).catch((err)=>{
         console.log(err);
@@ -110,34 +112,22 @@ export default function UsersList() {
   const deleteApi = (id:any) => {
     // const userDoc = doc(db, "products", id);
     // await deleteDoc(userDoc);
-    DeleteData("students",id);
+    DeleteData("subjects",id);
     // Swal.fire("Deleted!", "Your file has been deleted.", "success");
-    getStudents();
+    getSubjects();
   };
 
   const editData = 
-  (id:any, name:string, email:string, gender:string,dob:string,phone:string)=>{
-    const student={
+  (id:any, name:string, Class:string, )=>{
+    const teacher={
       id: id,
       name: name,
-      email: email,
-      phone: phone,
-      dob: dob,
-      gender: gender,
-      // address: address
+      Class: Class,
     }
-    console.log(student);
-    setFormID(student);
+    console.log(teacher);
+    setFormID(teacher);
     handleEditOpen();
   }
-
-  // const filterData = (v) => {
-  //   if (v) {
-  //     setRows([v]);
-  //   } else {
-  //     getUsers();
-  //   }
-  // };
 
   return (
     <>
@@ -150,7 +140,7 @@ export default function UsersList() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <EditForm fid={formId} func={getStudents}/>
+          <EditSubjectForm fid={formId} func={getSubjects}/>
         </Box>
       </Modal>
     </div>
@@ -162,7 +152,7 @@ export default function UsersList() {
             component="div"
             sx={{ padding: "20px" }}
           >
-            Student List
+            Subject List
           </Typography>
           <Divider />
           <Box height={10} />
@@ -183,7 +173,7 @@ export default function UsersList() {
               component="div"
               sx={{ flexGrow: 1 }}
             ></Typography>
-            <Button variant="contained" endIcon={<AddCircleIcon />} onClick={()=>navigateScreen("addStudents")}>
+            <Button variant="contained" endIcon={<AddCircleIcon />} onClick={()=>navigateScreen("addSubjects")}>
               Add
             </Button>
           </Stack>
@@ -196,16 +186,7 @@ export default function UsersList() {
                     Name
                   </TableCell>
                   <TableCell align="left" style={{ minWidth: "100px" }}>
-                    Email
-                  </TableCell>
-                  <TableCell align="left" style={{ minWidth: "100px" }}>
-                    Number
-                  </TableCell>
-                  <TableCell align="left" style={{ minWidth: "100px" }}>
-                    Date Of Birth
-                  </TableCell>
-                  <TableCell align="left" style={{ minWidth: "100px" }}>
-                    Gender
+                    Class
                   </TableCell>
                   <TableCell align="left" style={{ minWidth: "100px" }}>
                     Action
@@ -223,11 +204,8 @@ export default function UsersList() {
                         tabIndex={-1}
                         key={row.code}
                       >
-                        <TableCell align="left">{row.student.name}</TableCell>
-                        <TableCell align="left">{row.student.email}</TableCell>
-                        <TableCell align="left">{row.student.phone}</TableCell>
-                        <TableCell align="left">{row.student.dob}</TableCell>
-                        <TableCell align="left">{row.student.gender}</TableCell>
+                        <TableCell align="left">{row.subject.name}</TableCell>
+                        <TableCell align="left">{row.subject.class}</TableCell>
                         <TableCell align="left">
                           <Stack spacing={2} direction="row">
                             <EditIcon
@@ -238,7 +216,7 @@ export default function UsersList() {
                               }}
                               className="cursor-pointer"
                               // onClick={handleOpen}
-                              onClick={() => editData(row.id,row.student.name, row.student.email, row.student.gender,row.student.dob,row.student.phone)}
+                              onClick={() => editData(row.id,row.subject.name, row.subject.class)}
                             />
                             <DeleteIcon
                               style={{

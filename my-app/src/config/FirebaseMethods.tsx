@@ -44,8 +44,8 @@ export const getData = (nodeName: string, id?: any) => {
 
 export const EditData2 = (nodeName: string, id:any, data: any) => {
   return new Promise((resolve,reject)=>{
-    // data.id = push(ref(db, `${nodeName}`)).key;
-    
+    data.id = id;
+    console.log(data);
     // const reference = ref(db, `${nodeName}/${id}`);
     const reference = ref(db, `${nodeName}/${id}`);
     //console.log(data.id);

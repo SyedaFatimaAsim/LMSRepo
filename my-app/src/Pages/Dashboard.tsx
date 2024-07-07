@@ -29,6 +29,16 @@ import StudentTable from '../Screen/StudentGrid';
 import Students from '../Screen/Student';
 import Subjects from '../Screen/Subjects';
 import ShowStudents from '../Screen/ShowStudents';
+import Class from '../Screen/Class';
+import TransferStudent from '../Screen/TransferStudent';
+import { useState } from 'react';
+import TeacherGrid from '../Screen/TeacherGrid';
+import Teacher from '../Screen/Teacher';
+import SubjectGrid from '../Screen/SubjectGrid';
+import ClassGrid from '../Screen/ClassGrid';
+import SchoolRegistration from '../Screen/SchoolRegistration';
+import SyallbusList from '../Screen/ShowSyallbus';
+import Syallbus from '../Screen/Syallbus';
 
 const drawerWidth = 240;
 
@@ -83,8 +93,9 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 export default function PersistentDrawerLeft() {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
-  const [menu, setMenu] = React.useState();
+  const [open, setOpen] = useState(true);
+  const [menu, setMenu] = useState();
+  const [selectedItem , setSelectedItem] = useState<string>();
   const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
@@ -95,9 +106,10 @@ export default function PersistentDrawerLeft() {
     setOpen(false);
   };
 
-  const navigateScreen=(route:string)=>
+  const navigateScreen=(route:string,name:string)=>
   {
     navigate(`/dashboard/${route}`)
+    {setSelectedItem(name)}
   }
 
   const menuList = [
@@ -164,7 +176,7 @@ export default function PersistentDrawerLeft() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Persistent drawer
+            {selectedItem}
           </Typography>
         </Toolbar>
       </AppBar>}
@@ -189,12 +201,14 @@ export default function PersistentDrawerLeft() {
         <Divider />
         <List>
           {menuList.map((x, index) => (
+           
             <ListItem key={index} disablePadding>
-              <ListItemButton onClick={()=>navigateScreen(x.route)}>
+              <ListItemButton onClick={()=>navigateScreen(x.route,x.name)}>
                 <ListItemIcon>
                   {x.icon}
                 </ListItemIcon>
                 <ListItemText primary={x.name} />
+                
               </ListItemButton>
             </ListItem>
           ))}
@@ -288,8 +302,18 @@ export default function PersistentDrawerLeft() {
       <Main open={open}>
         <DrawerHeader /> 
         <Routes>
-        <Route path="students" element={<ShowStudents />} />
-        <Route path="subjects" element={<Subjects />} />
+        <Route path="students" element={<ShowStudents/>} />
+        <Route path="addStudents" element={<Students/>} />
+        <Route path="teacher" element={<TeacherGrid/>} />
+        <Route path="addTeacher" element={<Teacher/>} />
+        <Route path="transferStudents" element={<TransferStudent/>} />
+        <Route path="subjects" element={<SubjectGrid/>} />
+        <Route path="addSubjects" element={<Subjects/>} />
+        <Route path="addClass" element={<Class />} />
+        <Route path="class" element={<ClassGrid />} />
+        <Route path="school" element={<SchoolRegistration />} />
+        <Route path="syallbus" element={<SyallbusList/>} />
+        <Route path="addSyallbus" element={<Syallbus/>} />
         </Routes>
       </Main>
     </Box>

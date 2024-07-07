@@ -3,33 +3,48 @@ import SelectField from "../components/SelectField";
 import InputField from "../components/Input";
 import Dashboard from "../Pages/Dashboard";
 import './Students.css';
-import { useState } from "react";
-import { sendData } from "../config/FirebaseMethods";
+import { useEffect, useState } from "react";
+import { getData, sendData } from "../config/FirebaseMethods";
 
-export default function Subjects() 
+export default function SchoolRegistration() 
 {
-    const [subject, setSubject] = useState({
+    const [school, setSchool] = useState({
         name: '',
-        class: '',
+        address: '',
       });
+
+      const [getSchool, setGetSchool] = useState<any>([]);
+
+      useEffect(() => {
+        getSchoolData();
+      }, []);
+
+      const getSchoolData = ()=> {
+        getData("schools").then((res)=>{
+            console.log("done")
+          const schoolData:any = res;
+            setGetSchool(schoolData);
+          }).catch((err)=>{
+            console.log(err);
+          });
+      };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setSubject(prevSubject => ({
-          ...prevSubject,
+        setSchool(prevSchool => ({
+          ...prevSchool,
           [name]: value
         }));
       };
     
       const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(subject);
         let obj = {
-          subject: subject,
+          school: school,
           createdAt: JSON.stringify(new Date()),
         };
-
-        sendData("subjects",obj).then((res)=>{
+        
+        sendData("schools",obj).then((res)=>{
           console.log("Data send successfully")
         }).catch((err)=>{
           console.log("Not sent")
@@ -39,43 +54,39 @@ return <>
 <Box sx={{ display: 'flex' }}>
 <Dashboard/>
 <Box sx={{flexGrow:1,p:3}} className="container">
-<form onSubmit={handleSubmit}>
+    {getSchool.length>0? 
+     (
+        <p> Already registered</p>
+      ) : 
+    (
+    <form onSubmit={handleSubmit}>
         <InputField
           label="Name"
           type="text"
           id="name"
           name="name"
-          value={subject.name}
+          value={school.name}
           onChange={handleInputChange}
           required
         />
           <InputField
-          label="Class"
+          label="address"
           type="text"
-          id="class"
-          name="class"
-          value={subject.class}
+          id="address"
+          name="address"
+          value={school.address}
           onChange={handleInputChange}
           required
         />
-
-        {/* <SelectField
-          id="subjects"
-          name="subjects"
-          value={subject.class}
-          onChange={handleInputChange}
-          options={[
-            { value: '1', label: 'ClassI' },
-            { value: '2', label: 'ClassII' },
-            { value: '3', label: 'ClassIII' }
-          ]}
-          required
-        /> */}
         <div className="form-control">
           <button type="submit">Submit</button>
         </div>
       </form>
-</Box>
+     
+    )
+    }
+ </Box>
 </Box>
 </>
 }
+

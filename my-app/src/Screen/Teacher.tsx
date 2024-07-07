@@ -6,41 +6,43 @@ import { useState } from "react";
 import './Students.css';
 import { EditData2, sendData } from "../config/FirebaseMethods";
 
-export default function Students() 
+export default function Teachers() 
 {
-    const [student, setStudent] = useState({
+    const [teacher, setTeacher] = useState({
         name: '',
         email: '',
         phone: '',
-        dob: '',
+        qualification: '',
+        experience: '',
         gender: '',
-        address: ''
+        address: '',
+        allocated_to:'',
       });
 
-      const addData = () => {
-        let obj = {
-          student: student,
-          createdAt: JSON.stringify(new Date()),
-        };
-      }
+    //   const addData = () => {
+    //     let obj = {
+    //       teacher: teacher,
+    //       createdAt: JSON.stringify(new Date()),
+    //     };
+    //   }
       
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
-        setStudent(prevStudent => ({
-          ...prevStudent,
+        setTeacher(prevTeacher => ({
+          ...prevTeacher,
           [name]: value
         }));
       };
     
       const handleSubmit = (e:any) => {
         e.preventDefault();
-        console.log(student); 
+        console.log(teacher); 
         let obj = {
-          student: student,
+          teacher: teacher,
           createdAt: JSON.stringify(new Date()),
         };
 
-        sendData("students",obj).then((res)=>{
+        sendData("teachers",obj).then((res)=>{
           console.log("Data send successfully")
         }).catch((err)=>{
           console.log("Not sent")
@@ -49,14 +51,14 @@ export default function Students()
 return <>
 <Box sx={{ display: 'flex' }}>
 <Box component="main"sx={{flexGrow:2,p:4}} className="container">
-      <h2>Student Form</h2>
+      <h2>Teacher Form</h2>
       <form onSubmit={handleSubmit}>
         <InputField
           label="Name"
           type="text"
           id="name"
           name="name"
-          value={student.name}
+          value={teacher.name}
           onChange={handleInputChange}
           required
         />
@@ -65,7 +67,7 @@ return <>
           type="email"
           id="email"
           name="email"
-          value={student.email}
+          value={teacher.email}
           onChange={handleInputChange}
           required
         />
@@ -74,18 +76,36 @@ return <>
           type="tel"
           id="phone"
           name="phone"
-          value={student.phone}
+          value={teacher.phone}
           onChange={handleInputChange}
-          pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+          pattern="[0-9]{4}-[0-9]{3}-[0-9]{4}"
           placeholder="Format: 123-456-7890"
           required
         />
         <InputField
-          label="Date of Birth"
-          type="date"
-          id="dob"
-          name="dob"
-          value={student.dob}
+          label="Address"
+          type="text"
+          id="address"
+          name="address"
+          value={teacher.address}
+          onChange={handleInputChange}
+          required
+        />
+        <InputField
+          label="Experience"
+          type="text"
+          id="experience"
+          name="experience"
+          value={teacher.experience}
+          onChange={handleInputChange}
+          required
+        />
+        <InputField
+          label="Qualification"
+          type="text"
+          id="qualification"
+          name="qualification"
+          value={teacher.qualification}
           onChange={handleInputChange}
           required
         />
@@ -93,7 +113,7 @@ return <>
           label="Gender"
           id="gender"
           name="gender"
-          value={student.gender}
+          value={teacher.gender}
           onChange={handleInputChange}
           options={[
             { value: 'male', label: 'Male' },
